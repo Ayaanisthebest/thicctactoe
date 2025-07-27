@@ -6,6 +6,8 @@ import AnimatedBackground from '@/components/AnimatedBackground';
 export default function Home() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [expandedTile, setExpandedTile] = useState<number | null>(null);
+  const [showPlayModal, setShowPlayModal] = useState(false);
+  const [showWaitlistModal, setShowWaitlistModal] = useState(false);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -164,6 +166,45 @@ export default function Home() {
           transform: translateY(-2px);
           box-shadow: 0 15px 35px rgba(31, 38, 135, 0.4);
         }
+
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.8);
+          backdrop-filter: blur(10px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+          max-width: 500px;
+          width: 90%;
+          padding: 2rem;
+          border-radius: 24px;
+          animation: slideInModal 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes slideInModal {
+          from { 
+            opacity: 0;
+            transform: translateY(50px) scale(0.9);
+          }
+          to { 
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
       `}</style>
 
       {/* Animated Starfield Background */}
@@ -228,12 +269,18 @@ export default function Home() {
                 opacity: 0
               }}
             >
-              <a href="#demo" className="glass-button">
+              <button 
+                onClick={() => setShowPlayModal(true)}
+                className="glass-button"
+              >
                 <span className="text-gradient">Play the Future</span>
-              </a>
-              <a href="#waitlist" className="glass-button">
+              </button>
+              <button 
+                onClick={() => setShowWaitlistModal(true)}
+                className="glass-button"
+              >
                 Join Waitlist
-              </a>
+              </button>
             </div>
           </div>
 
@@ -723,6 +770,100 @@ export default function Home() {
             </div>
           </div>
         </footer>
+
+        {/* Play Modal */}
+        {showPlayModal && (
+          <div className="modal-overlay" onClick={() => setShowPlayModal(false)}>
+            <div 
+              className="modal-content"
+              style={liquidGlassEffect}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2 className="text-gradient" style={{ fontSize: '2rem', marginBottom: '1rem' }}>
+                🎮 Coming Soon!
+              </h2>
+              <p style={{ color: 'rgba(255, 255, 255, 0.8)', marginBottom: '1.5rem', lineHeight: '1.6' }}>
+                The quantum-powered Tic-Tac-Toe experience is currently in development. Our team is crafting the most immersive gaming experience ever created.
+              </p>
+              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                <button 
+                  onClick={() => setShowPlayModal(false)}
+                  className="glass-button"
+                  style={{ fontSize: '0.9rem', padding: '12px 24px' }}
+                >
+                  Close
+                </button>
+                <button 
+                  onClick={() => {
+                    setShowPlayModal(false);
+                    setShowWaitlistModal(true);
+                  }}
+                  className="glass-button"
+                  style={{ fontSize: '0.9rem', padding: '12px 24px' }}
+                >
+                  <span className="text-gradient">Get Notified</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Waitlist Modal */}
+        {showWaitlistModal && (
+          <div className="modal-overlay" onClick={() => setShowWaitlistModal(false)}>
+            <div 
+              className="modal-content"
+              style={liquidGlassEffect}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2 className="text-gradient" style={{ fontSize: '2rem', marginBottom: '1rem' }}>
+                🚀 Join the Revolution
+              </h2>
+              <p style={{ color: 'rgba(255, 255, 255, 0.8)', marginBottom: '2rem', lineHeight: '1.6' }}>
+                Be among the first to experience the future of gaming. Enter your email to secure early access.
+              </p>
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                alert('Thank you for joining the waitlist! We\'ll notify you when the game launches.');
+                setShowWaitlistModal(false);
+              }}>
+                <input 
+                  type="email" 
+                  placeholder="Enter your email"
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '1rem',
+                    marginBottom: '1.5rem',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    borderRadius: '12px',
+                    color: 'white',
+                    fontSize: '1rem',
+                    backdropFilter: 'blur(10px)'
+                  }}
+                />
+                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                  <button 
+                    type="button"
+                    onClick={() => setShowWaitlistModal(false)}
+                    className="glass-button"
+                    style={{ fontSize: '0.9rem', padding: '12px 24px' }}
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    type="submit"
+                    className="glass-button"
+                    style={{ fontSize: '0.9rem', padding: '12px 24px' }}
+                  >
+                    <span className="text-gradient">Join Waitlist</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </main>
     </>
   );
