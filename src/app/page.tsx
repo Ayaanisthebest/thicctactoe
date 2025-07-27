@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import AnimatedBackground from '@/components/AnimatedBackground';
 import Link from 'next/link';
 
@@ -9,6 +9,11 @@ export default function Home() {
   const [expandedTile, setExpandedTile] = useState<number | null>(null);
   const [showPlayModal, setShowPlayModal] = useState(false);
   const [showWaitlistModal, setShowWaitlistModal] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isSticky, setIsSticky] = useState(false);
+  const horizontalRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const observerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -18,8 +23,60 @@ export default function Home() {
       });
     };
 
+    let ticking = false;
+    
+    const updateScrollProgress = () => {
+      if (!observerRef.current || !horizontalRef.current) return;
+      
+      const rect = observerRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      
+      // Calculate when section enters and exits viewport
+      const triggerStart = 0; // Start when section reaches top of viewport
+      const triggerEnd = -(rect.height - windowHeight); // End when section finishes passing through
+      const totalDistance = triggerStart - triggerEnd;
+      
+      // Current position relative to trigger points
+      const currentProgress = (triggerStart - rect.top) / totalDistance;
+      const clampedProgress = Math.max(0, Math.min(1, currentProgress));
+      
+      // Update states
+      setScrollProgress(clampedProgress);
+      setIsSticky(clampedProgress > 0 && clampedProgress < 1);
+      
+      // Apply horizontal transform
+      const maxTransform = 55; // Reduced from 70 to stop earlier
+      const translatePercent = clampedProgress * maxTransform;
+      
+      horizontalRef.current.style.transform = `translateX(-${translatePercent}%)`;
+      
+      console.log('New Scroll System:', {
+        progress: `${Math.round(clampedProgress * 100)}%`,
+        translatePercent: `${Math.round(translatePercent)}%`,
+        rectTop: Math.round(rect.top),
+        isSticky: clampedProgress > 0 && clampedProgress < 1
+      });
+      
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(updateScrollProgress);
+        ticking = true;
+      }
+    };
+
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener('scroll', handleScroll);
+    
+    // Initial update
+    updateScrollProgress();
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   const glassStyle = {
@@ -157,6 +214,7 @@ export default function Home() {
           color: white;
           text-decoration: none;
           font-weight: 500;
+          font-size: 1.2rem;
           transition: all 0.3s ease;
           cursor: pointer;
           display: inline-block;
@@ -745,6 +803,235 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Horizontal Scrolling Game Modes */}
+        <div 
+          ref={observerRef}
+          style={{
+            height: '250vh', // Reduced from 300vh for less scroll distance
+            position: 'relative'
+          }}
+        >
+          <section 
+            ref={sectionRef}
+            style={{
+              position: 'sticky',
+              top: 0,
+              height: '100vh',
+              padding: '8rem 0',
+              background: isSticky 
+                ? 'linear-gradient(135deg, rgba(0, 0, 0, 0.98) 0%, rgba(20, 20, 40, 1) 100%)' 
+                : 'linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(20, 20, 40, 0.98) 100%)',
+              transition: 'background 0.3s ease',
+              borderBottom: isSticky ? '2px solid rgba(0, 212, 255, 0.3)' : 'none',
+              overflow: 'hidden'
+            }}>
+            
+            {/* Section Header */}
+            <div style={{ textAlign: 'center', marginBottom: '4rem', padding: '0 2rem' }}>
+              <h2 className="text-gradient" style={{
+                fontSize: 'clamp(2.5rem, 6vw, 4rem)',
+                fontWeight: 'bold',
+                marginBottom: '1.5rem'
+              }}>
+                Choose Your Reality
+              </h2>
+              <p style={{
+                fontSize: '1.25rem',
+                color: 'rgba(255, 255, 255, 0.7)',
+                maxWidth: '600px',
+                margin: '0 auto',
+                marginBottom: '1rem'
+              }}>
+                Experience Tic-Tac-Toe across infinite dimensions and realities
+              </p>
+              <p style={{
+                fontSize: '1rem',
+                color: 'rgba(255, 255, 255, 0.5)',
+                fontStyle: 'italic'
+              }}>
+                Keep scrolling to explore different game modes ↓
+              </p>
+            </div>
+
+            {/* Horizontal Scroll Container */}
+            <div style={{
+              overflow: 'hidden',
+              width: '100%',
+              position: 'relative'
+            }}>
+              <div 
+                ref={horizontalRef}
+                style={{
+                  display: 'flex',
+                  gap: '2rem',
+                  padding: '0 2rem',
+                  willChange: 'transform',
+                  transition: 'none',
+                  width: 'max-content'
+                }}>
+                
+                {/* Game Mode Cards */}
+                {[
+                {
+                  title: "Chaos Theory",
+                  subtitle: "Where order meets madness",
+                  description: "Random gravity shifts, rotating boards, and tiles that multiply unpredictably.",
+                  emoji: "�️",
+                  color: "#e11d48"
+                },
+                {
+                  title: "Microscopic",
+                  subtitle: "Cellular warfare",
+                  description: "Play on grids of bacteria that evolve, split, and consume each other mid-game.",
+                  emoji: "🦠",
+                  color: "#06b6d4"
+                },
+                {
+                  title: "Food Fight",
+                  subtitle: "Culinary combat",
+                  description: "Pizza vs Tacos vs Sushi in an epic battle for gastronomic supremacy.",
+                  emoji: "🍕",
+                  color: "#f59e0b"
+                },
+                {
+                  title: "Pet Simulator",
+                  subtitle: "Adopt, don't shop",
+                  description: "Your tic-tac-toe pieces are virtual pets that need feeding and love to win.",
+                  emoji: "🐱",
+                  color: "#ec4899"
+                },
+                {
+                  title: "Weather Wars",
+                  subtitle: "Climate chaos",
+                  description: "Hurricanes, blizzards, and rainbow storms affect gameplay in real-time.",
+                  emoji: "⛈️",
+                  color: "#8b5cf6"
+                },
+                {
+                  title: "Emoji Explosion",
+                  subtitle: "Digital hieroglyphics",
+                  description: "Play with 1000+ emoji combinations that react to your facial expressions.",
+                  emoji: "😂",
+                  color: "#eab308"
+                },
+                {
+                  title: "Space Trash",
+                  subtitle: "Cosmic junkyard",
+                  description: "Navigate asteroid fields while aliens try to abduct your winning moves.",
+                  emoji: "�",
+                  color: "#10b981"
+                },
+                {
+                  title: "Retro Glitch",
+                  subtitle: "Y2K nostalgia trip",
+                  description: "Deliberately broken graphics, dial-up sounds, and pixelated chaos.",
+                  emoji: "📼",
+                  color: "#f97316"
+                },
+                {
+                  title: "Nightmare Mode",
+                  subtitle: "Sweet dreams are overrated",
+                  description: "The board screams, pieces have googly eyes, and nothing makes sense.",
+                  emoji: "👹",
+                  color: "#dc2626"
+                },
+                {
+                  title: "Zen Garden",
+                  subtitle: "Inner peace through competition",
+                  description: "Meditative gameplay with singing bowls and floating lotus petals.",
+                  emoji: "🧘",
+                  color: "#059669"
+                }
+              ].map((mode, index) => (
+                <div
+                  key={index}
+                  style={{
+                    ...glassStyle,
+                    minWidth: '350px',
+                    width: '350px',
+                    flexShrink: 0,
+                    padding: '2rem',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-10px) scale(1.02)';
+                    e.currentTarget.style.boxShadow = `0 20px 60px ${mode.color}40`;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                    e.currentTarget.style.boxShadow = '0 8px 32px rgba(31, 38, 135, 0.37)';
+                  }}
+                >
+                  {/* Emoji Icon */}
+                  <div style={{
+                    fontSize: '4rem',
+                    textAlign: 'center',
+                    marginBottom: '1.5rem',
+                    filter: `drop-shadow(0 0 20px ${mode.color})`
+                  }}>
+                    {mode.emoji}
+                  </div>
+
+                  {/* Title */}
+                  <h3 style={{
+                    fontSize: '1.5rem',
+                    fontWeight: '700',
+                    color: 'white',
+                    marginBottom: '0.5rem',
+                    textAlign: 'center'
+                  }}>
+                    {mode.title}
+                  </h3>
+
+                  {/* Subtitle */}
+                  <p style={{
+                    fontSize: '0.9rem',
+                    color: mode.color,
+                    fontWeight: '500',
+                    textTransform: 'uppercase',
+                    letterSpacing: '1px',
+                    textAlign: 'center',
+                    marginBottom: '1.5rem'
+                  }}>
+                    {mode.subtitle}
+                  </p>
+
+                  {/* Description */}
+                  <p style={{
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    lineHeight: '1.6',
+                    textAlign: 'center',
+                    marginBottom: '2rem'
+                  }}>
+                    {mode.description}
+                  </p>
+
+                  {/* Play Button */}
+                  <button
+                    onClick={() => setShowPlayModal(true)}
+                    style={{
+                      width: '100%',
+                      padding: '1rem',
+                      background: `linear-gradient(135deg, ${mode.color}40, ${mode.color}60)`,
+                      border: `1px solid ${mode.color}80`,
+                      borderRadius: '12px',
+                      color: 'white',
+                      fontWeight: '600',
+                      fontSize: '1.1rem',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    Play Now ✨
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+        </div>
+
         {/* Footer */}
         <footer style={{
           padding: '3rem 2rem',
@@ -803,7 +1090,7 @@ export default function Home() {
                 <button 
                   onClick={() => setShowPlayModal(false)}
                   className="glass-button"
-                  style={{ fontSize: '0.9rem', padding: '12px 24px' }}
+                  style={{ fontSize: '1.1rem', padding: '12px 24px' }}
                 >
                   Close
                 </button>
@@ -813,7 +1100,7 @@ export default function Home() {
                     setShowWaitlistModal(true);
                   }}
                   className="glass-button"
-                  style={{ fontSize: '0.9rem', padding: '12px 24px' }}
+                  style={{ fontSize: '1.1rem', padding: '12px 24px' }}
                 >
                   <span className="text-gradient">Get Notified</span>
                 </button>
@@ -862,14 +1149,14 @@ export default function Home() {
                     type="button"
                     onClick={() => setShowWaitlistModal(false)}
                     className="glass-button"
-                    style={{ fontSize: '0.9rem', padding: '12px 24px' }}
+                    style={{ fontSize: '1.1rem', padding: '12px 24px' }}
                   >
                     Cancel
                   </button>
                   <button 
                     type="submit"
                     className="glass-button"
-                    style={{ fontSize: '0.9rem', padding: '12px 24px' }}
+                    style={{ fontSize: '1.1rem', padding: '12px 24px' }}
                   >
                     <span className="text-gradient">Join Waitlist</span>
                   </button>
