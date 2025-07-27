@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import AnimatedBackground from '@/components/AnimatedBackground';
+import Link from 'next/link';
 
 export default function Home() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -764,9 +765,22 @@ export default function Home() {
               }}>
                 Join thousands of players waiting for the next evolution of gaming
               </p>
-              <a href="#waitlist" className="glass-button">
-                <span className="text-gradient">Join the Revolution</span>
-              </a>
+              <div style={{
+                display: 'flex',
+                gap: '1rem',
+                justifyContent: 'center',
+                flexWrap: 'wrap'
+              }}>
+                <button 
+                  onClick={() => setShowWaitlistModal(true)}
+                  className="glass-button"
+                >
+                  <span className="text-gradient">Join the Revolution</span>
+                </button>
+                <Link href="/about" className="glass-button">
+                  Meet Our Team 🎪
+                </Link>
+              </div>
             </div>
           </div>
         </footer>
