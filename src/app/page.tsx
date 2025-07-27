@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import AnimatedBackground from '@/components/AnimatedBackground';
 import Link from 'next/link';
+import ZoomIntoO from '@/components/ZoomIntoO';
 
 export default function Home() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -405,6 +406,9 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* Zoom Into O Section */}
+        <ZoomIntoO />
 
         {/* About Section */}
         <section style={{
@@ -1031,6 +1035,8 @@ export default function Home() {
           </div>
         </section>
         </div>
+
+        {/* Zoom Into O Section (moved above) */}
 
         {/* Footer */}
         <footer style={{
