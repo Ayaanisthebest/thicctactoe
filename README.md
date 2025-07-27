@@ -1,36 +1,168 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FutureTic - The Evolution of Tic-Tac-Toe 🌐✨
 
-## Getting Started
+A visually stunning, immersive, and animated Liquid Glass-inspired website promoting a futuristic, evolved version of Tic-Tac-Toe. Experience the future of gaming with cyber-minimalist aesthetics, interactive animations, and quantum strategy.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Visual Design
+- **Glassmorphism UI**: Translucent elements with frosted glass effects throughout
+- **Animated Gradients**: Color-shifting backgrounds with cosmic aurora-like animations
+- **Interactive Particles**: Cursor-reactive particle system with magnetic effects
+- **Smooth Animations**: Scroll-triggered animations powered by Framer Motion and GSAP
+
+### Interactive Elements
+- **Custom Cursor**: Glowing cursor with trailing particles and magnetic hover effects
+- **Scroll Progress**: Animated progress bar showing scroll depth
+- **Responsive Design**: Optimized for desktop and mobile with touch animations
+- **Glass Components**: Reusable glass cards and buttons with hover effects
+
+### Sections
+- **Hero Section**: Immersive full-screen intro with floating Tic-Tac-Toe grid
+- **About Section**: Feature showcase with 3D tilt cards and scroll animations
+- **Game Preview**: Interactive game board mockup with visual effects
+- **Waitlist Modal**: Beautiful signup form with success animations
+- **Footer**: Ambient design with floating particles and social links
+
+## 🛠 Tech Stack
+
+- **Framework**: Next.js 14+ with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS with custom glassmorphism utilities
+- **Animations**: Framer Motion & GSAP
+- **Effects**: Custom particle system, Three.js elements
+- **Icons**: Lucide React
+- **Fonts**: Inter (Google Fonts)
+
+## 🎨 Design Philosophy
+
+Inspired by **Liquid Glass + Solana + Nothing Tech** aesthetics:
+- Cyber-minimalist approach with soft, rounded edges
+- Translucent layers creating depth and breathing space
+- Color palette featuring neon blues, purples, pinks, and teal
+- Premium feel with intentional, next-gen interactions
+
+## 🚦 Getting Started
+
+### Prerequisites
+- Node.js 18+ 
+- npm, yarn, pnpm, or bun
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd vibecodept3
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   yarn install
+   # or
+   pnpm install
+   ```
+
+3. **Run the development server**
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   # or
+   pnpm dev
+   ```
+
+4. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## 📁 Project Structure
+
+```
+src/
+├── app/
+│   ├── globals.css          # Global styles with glassmorphism
+│   ├── layout.tsx           # Root layout
+│   └── page.tsx             # Main page
+├── components/
+│   ├── AnimatedBackground.tsx   # Particle system & gradients
+│   ├── CustomCursor.tsx         # Interactive cursor
+│   ├── ScrollProgress.tsx       # Scroll indicator
+│   ├── GlassCard.tsx           # Reusable glass card
+│   ├── GlassButton.tsx         # Interactive glass button
+│   ├── HeroSection.tsx         # Landing hero
+│   ├── AboutSection.tsx        # Features showcase
+│   ├── GamePreview.tsx         # Game demonstration
+│   ├── WaitlistModal.tsx       # Signup modal
+│   └── Footer.tsx              # Site footer
+└── .github/
+    └── copilot-instructions.md # Development guidelines
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🎯 Key Animations
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Background**: Cosmic gradient shifts with particle interactions
+- **Scroll**: Element reveals with stagger animations
+- **Hover**: Magnetic effects and glass material responses
+- **Cursor**: Particle trails and hover state changes
+- **Modal**: Spring animations with celebration effects
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🌟 Performance Features
 
-## Learn More
+- **Lazy Loading**: Heavy animations load on-demand
+- **Optimized Rendering**: CSS transforms for smooth animations
+- **Memory Management**: Proper cleanup of animation timelines
+- **Mobile Optimization**: Reduced particle density on mobile
+- **Accessibility**: Respects `prefers-reduced-motion`
 
-To learn more about Next.js, take a look at the following resources:
+## 🚀 Build & Deploy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+# Build for production
+npm run build
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Start production server
+npm start
 
-## Deploy on Vercel
+# Lint code
+npm run lint
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🎨 Customization
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Colors
+Edit CSS variables in `globals.css`:
+```css
+:root {
+  --neon-blue: #00d4ff;
+  --neon-purple: #b347d9;
+  --neon-pink: #ff006e;
+  --neon-teal: #06ffa5;
+}
+```
+
+### Animations
+Modify animation parameters in component files or create new variants using Framer Motion.
+
+## 📱 Browser Support
+
+- Chrome 80+
+- Firefox 80+
+- Safari 14+
+- Edge 80+
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+**Built with passion for the future of gaming** 🎮✨
